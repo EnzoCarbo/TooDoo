@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using TooDoo.Models;
+﻿using TooDoo.Models;
 
 namespace TooDoo.Tests.Models;
 
@@ -20,10 +14,8 @@ public class YearMonthTests
         Assert.Equal(new YearMonth(2027, 1), next);
     }
 
-
     [Fact]
-
-    public void Next_OfApril_IsMay_OfSameYear()
+    public void Next_OfApril_IsMayOfSameYear()
     {
         var april = new YearMonth(2026, 4);
 
@@ -32,4 +24,24 @@ public class YearMonthTests
         Assert.Equal(new YearMonth(2026,5), next);
     }
 
+    [Fact]
+    public void Previous_OfJanuary_IsDecemberOfPreviousYear()
+    {
+        var january = new YearMonth(2026, 1);
+
+        var previous = january.Previous();
+
+        Assert.Equal(new YearMonth(2025,12), previous);
+
     }
+    [Fact]
+    public void Previous_OfApril_IsMarchOfSameYear()
+    {
+        var april = new YearMonth(2026, 4);
+
+        var previous = april.Previous();
+
+        Assert.Equal(new YearMonth(2026, 3), previous);
+    }
+
+}

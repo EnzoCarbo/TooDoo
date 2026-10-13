@@ -27,4 +27,16 @@ public readonly record struct YearMonth
             return new YearMonth(Year, Month + 1);
         }
     }
+
+    public YearMonth Previous()
+    {
+        if (Month == 1)
+        {
+            return new YearMonth(Year - 1, 12);
+        }
+        else
+        {
+            return new YearMonth(Year, Month - 1);
+        }
+    }
 }
