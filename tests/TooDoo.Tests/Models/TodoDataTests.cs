@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace TooDoo.Tests.Models
 {
-    internal class SubTask
-    {
-    }
+
 }
