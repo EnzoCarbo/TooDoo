@@ -17,7 +17,7 @@ public readonly record struct YearMonth
         Year = year;
         Month = month;
     }
-
+   
     public int Year { get; }
     public int Month { get; }
 
@@ -46,5 +46,9 @@ public readonly record struct YearMonth
 
     }
 
+    public static YearMonth From(DateTime date)
+    {
+       return new YearMonth(date.Year, date.Month);
+    }
 
-}
+} 

@@ -4,6 +4,7 @@ namespace TooDoo.Tests.Models;
 
 public class YearMonthTests
 {
+
     [Fact]
     public void Next_OfDecember_IsJanuaryOfNextYear()
     {
@@ -21,7 +22,7 @@ public class YearMonthTests
 
         var next = april.Next();
 
-        Assert.Equal(new YearMonth(2026,5), next);
+        Assert.Equal(new YearMonth(2026, 5), next);
     }
 
     [Fact]
@@ -31,7 +32,7 @@ public class YearMonthTests
 
         var previous = january.Previous();
 
-        Assert.Equal(new YearMonth(2025,12), previous);
+        Assert.Equal(new YearMonth(2025, 12), previous);
 
     }
     [Fact]
@@ -53,4 +54,15 @@ public class YearMonthTests
         Assert.Throws<ArgumentOutOfRangeException>(() => new YearMonth(2026, month));
     }
 
+    [Fact]
+    public void From_Date_TakesYearAndMonth()
+    {
+        var yearMonth = YearMonth.From(new DateTime(2026, 10, 31));
+
+
+        Assert.Equal(new YearMonth(2026, 10), yearMonth);
+
+    }
 }
+
+
