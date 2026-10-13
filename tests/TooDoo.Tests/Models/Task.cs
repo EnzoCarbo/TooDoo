@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TooDoo.Models
+namespace TooDoo.Tests.Models
 {
-    internal class Class1
+    internal class Task
     {
     }
 }
