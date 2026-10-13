@@ -44,4 +44,13 @@ public class YearMonthTests
         Assert.Equal(new YearMonth(2026, 3), previous);
     }
 
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(13)]
+    public void Ctor_WithInvalidMonth_Throws(int month)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new YearMonth(2026, month));
+    }
+
 }

@@ -9,6 +9,11 @@ public readonly record struct YearMonth
 {
     public YearMonth(int year, int month)
     {
+        if (month < 1 || month > 12)
+        {
+            throw new ArgumentOutOfRangeException(nameof(month), month, "Month must be between 1 and 12.");
+        }
+
         Year = year;
         Month = month;
     }
@@ -38,5 +43,8 @@ public readonly record struct YearMonth
         {
             return new YearMonth(Year, Month - 1);
         }
+
     }
+
+
 }
