@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace TooDoo.Models;
 
-public readonly record struct YearMonth
+public readonly record struct YearMonth : IComparable<YearMonth>
 {
     public YearMonth(int year, int month)
     {
@@ -51,4 +51,24 @@ public readonly record struct YearMonth
        return new YearMonth(date.Year, date.Month);
     }
 
-} 
+    public int CompareTo(YearMonth other)
+    {
+        int yearComparaison = Year.CompareTo(other.Year);
+
+        if (yearComparaison != 0)
+        {
+            return yearComparaison;
+        }
+        
+        return Month.CompareTo(other.Month);
+
+    }
+
+    public static bool operator <(YearMonth left, YearMonth right) => left.CompareTo(right) < 0;
+    public static bool operator >(YearMonth left, YearMonth right) => left.CompareTo(right) > 0;
+    public static bool operator >=(YearMonth left, YearMonth right) => left.CompareTo(right) >= 0;
+    public static bool operator <=(YearMonth left, YearMonth right) => left.CompareTo(right) <= 0;
+
+
+
+}

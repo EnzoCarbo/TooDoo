@@ -63,6 +63,22 @@ public class YearMonthTests
         Assert.Equal(new YearMonth(2026, 10), yearMonth);
 
     }
+
+
+    [Fact]
+    public void Comparison_OrdersByYearThenMonth()
+    {
+        var december2026 = new YearMonth(2026, 12);
+        var january2027 = new YearMonth(2027, 01);
+
+        var march = new YearMonth(2026, 03);
+        var april = new YearMonth(2026, 04);
+
+            Assert.True(december2026 < january2027);
+
+            Assert.True(march < april);
+
+    }
 }
 
 
