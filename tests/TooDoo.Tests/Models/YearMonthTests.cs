@@ -106,6 +106,17 @@ public class YearMonthTests
         Assert.Equal("2026-03", march2026String);
     }
 
+
+    [Theory]
+    [InlineData("2026")]
+    [InlineData("abc")]
+    [InlineData("")]
+
+    public void Parse_InvalideText_Throw(string value)
+    {
+        Assert.Throws<FormatException>(() => YearMonth.Parse(value));
+    }
+
 }
 
 
