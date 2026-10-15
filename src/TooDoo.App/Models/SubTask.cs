@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TooDoo.Models
+﻿namespace TooDoo.Models
 {
-    internal class SubTask
+    public class SubTask
     {
+        public long ID { get; set; }    
+        public required string Title { get; set; }
+        public bool IsCompleted { get; set; }
+
     }
 }
