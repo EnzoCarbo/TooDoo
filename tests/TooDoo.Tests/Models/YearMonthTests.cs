@@ -79,6 +79,33 @@ public class YearMonthTests
             Assert.True(march < april);
 
     }
+
+    [Theory]
+    [InlineData("2026-12", 2026, 12)]
+    [InlineData("2026-03", 2026, 3)]
+
+    public void ToString_And_Parse_RoundTrip(string  value, int year, int month)
+    {
+
+        var yearMonth = YearMonth.Parse(value);
+
+        Assert.Equal(value, yearMonth.ToString());
+
+        Assert.Equal(year, yearMonth.Year);
+
+        Assert.Equal(month, yearMonth.Month);
+
+    }
+    [Fact]
+    public void ToString_PadsMonthWithZero()
+    {
+        var march2026 = new YearMonth(2026, 3);
+            
+        var march2026String = march2026.ToString();
+
+        Assert.Equal("2026-03", march2026String);
+    }
+
 }
 
 

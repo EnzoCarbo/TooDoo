@@ -70,5 +70,31 @@ public readonly record struct YearMonth : IComparable<YearMonth>
     public static bool operator <=(YearMonth left, YearMonth right) => left.CompareTo(right) <= 0;
 
 
+    public static YearMonth Parse(string s)
+    {
+
+        var result = s.Split('-');
+
+        if (result.Length != 2)
+        {
+            throw new FormatException($"Invalid year-month: '{s}'. Expected format: yyyy-MM.");
+        }
+
+        int year = int.Parse(result[0]);
+        int month = int.Parse(result[1]);
+
+        return new YearMonth(year, month);
+
+    }
+
+
+    public override string ToString()
+    {
+            var year = Year.ToString("D4");
+            var month = Month.ToString("D2");
+
+            return year + "-" + month;
+    }
+
 
 }
