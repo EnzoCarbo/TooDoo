@@ -1,4 +1,5 @@
-﻿using TooDoo.Models;
+﻿using System.Windows.Controls;
+using TooDoo.Models;
 
 namespace TooDoo.Tests.Models
 {
@@ -26,7 +27,23 @@ namespace TooDoo.Tests.Models
             Assert.NotEqual(Guid.Empty, task.Id);
 
             Assert.Contains(task, data.Tasks);
+
+            Assert.Empty(data.Tasks);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void AddTask_WithBlankTitle_Throws(string title)
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10,31, 15, 8, 30, 0);
+
+            Assert.Throws<ArgumentException>(() => data.AddTask(title, null, now));
+
         }
     }
+
+
 
 }

@@ -15,19 +15,23 @@ namespace TooDoo.Models
 
         public TodoTask AddTask(string title, YearMonth? month, DateTime now)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(title);
 
-            
-           var task =  new TodoTask { 
-               Id = Guid.NewGuid(),
-               Title = title.Trim(), 
-               Month = month, 
-               CreatedAt = now,
-               UpdatedAt = now,
-           };
+            var task = new TodoTask
+            {
+                Id = Guid.NewGuid(),
+                Title = title.Trim(),
+                Month = month,
+                CreatedAt = now,
+                UpdatedAt = now,
+            };
+
 
             Tasks.Add(task);
 
             return task;
+
+
         }
     }
 }
