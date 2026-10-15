@@ -12,5 +12,27 @@ namespace TooDoo.Models
         public int SchemaVersion { get; set; } = 1;
 
         public List<TodoTask> Tasks { get; set; } = new();
+
+        public TodoTask AddTask(string title, YearMonth? month, DateTime now)
+        {
+
+            
+           var task =  new TodoTask { 
+               Id = Guid.NewGuid(),
+               Title = title.Trim(), 
+               Month = month, 
+               CreatedAt = now,
+               UpdatedAt = now,
+           };
+
+            Tasks.Add(task);
+
+            return task;
+        }
     }
 }
+
+
+
+
+
