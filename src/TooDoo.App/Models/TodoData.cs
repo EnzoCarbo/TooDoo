@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace TooDoo.Models
 {
-    internal class TodoData
+    public class TodoData
     {
+
+        public int SchemaVersion { get; set; } = 1;
+
+        public List<TodoTask> Tasks { get; set; } = new();
     }
 }
