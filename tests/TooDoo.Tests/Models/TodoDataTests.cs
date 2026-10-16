@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using TooDoo.Models;
+﻿using TooDoo.Models;
 
 namespace TooDoo.Tests.Models
 {

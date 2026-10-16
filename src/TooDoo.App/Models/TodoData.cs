@@ -32,12 +32,7 @@ namespace TooDoo.Models
 
         public IEnumerable<TodoTask> TasksIn(YearMonth? yearMonth)
         {
-            if (yearMonth != null)
-            {
-                return TasksIn(yearMonth);
-            }
-
-            return TasksIn(yearMonth);
+            throw new NotImplementedException();
         }
     }
 }
