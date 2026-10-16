@@ -46,16 +46,40 @@ namespace TooDoo.Tests.Models
         [Fact]
 
         public void TasksIn_Null_ReturnsOnlyBacklog()
-        { 
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 31, 10, 10, 10, 30);
+            var month = new YearMonth(2026, 10);
+            var backlogTask = data.AddTask("Titre test 1", null, now);
+            data.AddTask("Titre test 2", month, now);
+            var result = data.TasksIn(null);
+
+            var only = Assert.Single(result);
+            Assert.Equal(backlogTask, only);
+
+
         }
 
         [Fact]
         public void TasksIn_Month_ReturnsOnlyThatMonth_InInsertionOrder()
         {
 
+
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 31, 10, 10, 10, 30);
+            var october = new YearMonth(2026, 10);
+            var november = new YearMonth(2026, 11);
+
+            var first = data.AddTask("Titre test ", october, now);
+            var second = data.AddTask("Titre test 2", november, now);
+            var third = data.AddTask("Titre test 3", october, now);
+
+            var result = data.TasksIn(october);
+
+            Assert.Equal(new[] { first, third }, result);
         }
 
-        
+
     }
 
 
