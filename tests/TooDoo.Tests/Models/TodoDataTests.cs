@@ -28,7 +28,6 @@ namespace TooDoo.Tests.Models
 
             Assert.Contains(task, data.Tasks);
 
-            Assert.Empty(data.Tasks);
         }
 
         [Theory]
@@ -37,12 +36,30 @@ namespace TooDoo.Tests.Models
         public void AddTask_WithBlankTitle_Throws(string title)
         {
             var data = new TodoData();
-            var now = new DateTime(2026, 10,31, 15, 8, 30, 0);
+            var now = new DateTime(2026, 10, 31, 15, 8, 30, 0);
 
             Assert.Throws<ArgumentException>(() => data.AddTask(title, null, now));
 
+            Assert.Empty(data.Tasks);
+
         }
+
+        [Fact]
+
+        public void TasksIn_Null_ReturnsOnlyBacklog()
+        { 
+        }
+
+        [Fact]
+        public void TasksIn_Month_ReturnsOnlyThatMonth_InInsertionOrder()
+        {
+
+        }
+
+        
     }
+
+
 
 
 

@@ -25,13 +25,19 @@ namespace TooDoo.Models
                 CreatedAt = now,
                 UpdatedAt = now,
             };
-
-
             Tasks.Add(task);
 
             return task;
+        }
 
+        public IEnumerable<TodoTask> TasksIn(YearMonth? yearMonth)
+        {
+            if (yearMonth != null)
+            {
+                return TasksIn(yearMonth);
+            }
 
+            return TasksIn(yearMonth);
         }
     }
 }
