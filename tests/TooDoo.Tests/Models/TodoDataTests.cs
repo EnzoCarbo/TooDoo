@@ -166,6 +166,23 @@ namespace TooDoo.Tests.Models
             Assert.DoesNotContain(task1, data.Tasks);
 
         }
+
+        [Fact]
+        public void DeleteTask_UnknownId_ReturnsFalse()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var october = new YearMonth(2026, 10);
+            var task1 = data.AddTask("Task 1", october, now);
+            var task2 = data.AddTask("Task 2 ", october, now);
+
+            var deleted = data.DeleteTask(Guid.NewGuid());
+
+            Assert.False(deleted);
+            Assert.Contains(task1, data.Tasks);
+            Assert.Contains(task2, data.Tasks);
+
+        }
     }
 
 
