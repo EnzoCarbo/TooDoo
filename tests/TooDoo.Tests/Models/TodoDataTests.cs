@@ -115,6 +115,23 @@ namespace TooDoo.Tests.Models
             Assert.Equal(now, task.UpdatedAt);
             Assert.Equal(now, task.CreatedAt);
         }
+
+        [Fact]
+        public void SetTaskDone_UpdatesUpdatedAt()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task = data.AddTask("Task 1", october, now);
+
+            var taskDone = data.SetTaskDone(task.Id, true, later);
+
+            Assert.True(taskDone);
+
+            Assert.True(task.IsDone);
+            Assert.Equal(later, task.UpdatedAt);
+        }
     }
 
 

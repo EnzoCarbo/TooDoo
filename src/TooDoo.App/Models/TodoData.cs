@@ -48,6 +48,19 @@ namespace TooDoo.Models
             return true;
         }
 
+        public bool SetTaskDone(Guid id, bool isDone, DateTime now)
+        {
+            var task = Tasks.FirstOrDefault(task => task.Id == id);
+            if (task == null)
+            {
+                return false;
+            }
+            task.IsDone = isDone;
+            task.UpdatedAt = now;
+            return true;
+        }
+
+
     }
 }
 
