@@ -38,7 +38,7 @@ namespace TooDoo.Models
 
         public bool RenameTask(Guid id, string title, DateTime now)
         {
-            var task = Tasks.FirstOrDefault(t => t.Id == id);
+            var task = FindTask(id);
             if (task == null)
             {
                 return false;
@@ -51,7 +51,7 @@ namespace TooDoo.Models
 
         public bool SetTaskDone(Guid id, bool isDone, DateTime now)
         {
-            var task = Tasks.FirstOrDefault(t => t.Id == id);
+            var task = FindTask(id);
             if (task == null)
             {
                 return false;
@@ -63,7 +63,7 @@ namespace TooDoo.Models
 
         public bool MoveTask(Guid id, YearMonth? yearMonth, DateTime now)
         {
-            var task = Tasks.FirstOrDefault(t => t.Id == id);
+            var task = FindTask(id);
             if (task == null)
             {
                 return false;
@@ -72,6 +72,8 @@ namespace TooDoo.Models
             task.UpdatedAt = now;
             return true;
         }
+
+        private TodoTask? FindTask(Guid id) => Tasks.FirstOrDefault(t => t.Id == id);
 
     }
 }
