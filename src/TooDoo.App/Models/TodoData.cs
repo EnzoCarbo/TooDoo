@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TooDoo.Models
+﻿namespace TooDoo.Models
 {
     public class TodoData
     {
 
         public int SchemaVersion { get; set; } = 1;
-
         public List<TodoTask> Tasks { get; set; } = new();
+        private TodoTask? FindTask(Guid id) => Tasks.FirstOrDefault(t => t.Id == id);
 
         public TodoTask AddTask(string title, YearMonth? month, DateTime now)
         {
@@ -73,7 +66,6 @@ namespace TooDoo.Models
             return true;
         }
 
-        private TodoTask? FindTask(Guid id) => Tasks.FirstOrDefault(t => t.Id == id);
 
     }
 }
