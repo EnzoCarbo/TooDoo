@@ -108,7 +108,7 @@ namespace TooDoo.Tests.Models
             var october = new YearMonth(2026, 10);
             var task = data.AddTask("Task 1", october, now);
 
-            var renamed = data.RenameTask(Guid.Empty, "Task 1", later);
+            var renamed = data.RenameTask(Guid.NewGuid(), "Autre titre", later);
             Assert.False(renamed);
 
             Assert.Equal("Task 1", task.Title);
