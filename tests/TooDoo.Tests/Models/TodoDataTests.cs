@@ -79,7 +79,42 @@ namespace TooDoo.Tests.Models
             Assert.Equal(new[] { first, third }, result);
         }
 
+        [Fact]
+        public void RenameTask_ChangesTitle_AndUpdatesUpdatedAt()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task = data.AddTask("Task 1", october, now);
 
+            var renamed = data.RenameTask(task.Id, "  Nouveau titre  ", later);
+
+            Assert.True(renamed);
+
+            Assert.Equal("Nouveau titre", task.Title);
+            Assert.Equal(later, task.UpdatedAt);
+            Assert.Equal(now, task.CreatedAt);
+
+        }
+
+
+        [Fact]
+        public void RenameTask_UnknownId_ReturnsFalse()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task = data.AddTask("Task 1", october, now);
+
+            var renamed = data.RenameTask(Guid.Empty, "Task 1", later);
+            Assert.False(renamed);
+
+            Assert.Equal("Task 1", task.Title);
+            Assert.Equal(now, task.UpdatedAt);
+            Assert.Equal(now, task.CreatedAt);
+        }
     }
 
 

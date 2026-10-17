@@ -34,6 +34,20 @@ namespace TooDoo.Models
         {
             return Tasks.Where(t => t.Month == yearMonth);
         }
+
+        public bool RenameTask(Guid id, string title, DateTime now)
+        {
+            var task = Tasks.FirstOrDefault(t => t.Id == id);
+            if (task == null)
+            {
+                return false;
+            }
+
+            task.Title = title.Trim();
+            task.UpdatedAt = now;
+            return true;
+        }
+
     }
 }
 
