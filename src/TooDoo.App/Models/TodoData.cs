@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,7 +51,7 @@ namespace TooDoo.Models
 
         public bool SetTaskDone(Guid id, bool isDone, DateTime now)
         {
-            var task = Tasks.FirstOrDefault(task => task.Id == id);
+            var task = Tasks.FirstOrDefault(t => t.Id == id);
             if (task == null)
             {
                 return false;
@@ -60,6 +61,17 @@ namespace TooDoo.Models
             return true;
         }
 
+        public bool MoveTask(Guid id, YearMonth? yearMonth, DateTime now)
+        {
+            var task = Tasks.FirstOrDefault(t => t.Id == id);
+            if (task == null)
+            {
+                return false;
+            }
+            task.Month = yearMonth;
+            task.UpdatedAt = now;
+            return true;
+        }
 
     }
 }

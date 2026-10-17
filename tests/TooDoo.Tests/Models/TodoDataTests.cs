@@ -132,6 +132,24 @@ namespace TooDoo.Tests.Models
             Assert.True(task.IsDone);
             Assert.Equal(later, task.UpdatedAt);
         }
+
+        [Fact]
+        public void MoveTask_ToBacklog_SetsMonthNull()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task = data.AddTask("Task 1", october, now);
+
+            var moved = data.MoveTask(task.Id, null, later);
+
+            Assert.True(moved);
+
+            Assert.Null(task.Month);
+
+            Assert.Equal(later, task.UpdatedAt);
+        }
     }
 
 
