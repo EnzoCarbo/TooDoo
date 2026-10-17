@@ -66,6 +66,16 @@
             return true;
         }
 
+        public bool DeleteTask(Guid id)
+        {
+            var task = FindTask(id);
+            if (task == null)
+            {
+                return false;
+            }
+            Tasks.Remove(task);
+            return true;
+        }
 
     }
 }

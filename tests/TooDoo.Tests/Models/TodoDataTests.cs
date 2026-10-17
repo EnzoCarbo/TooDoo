@@ -150,6 +150,22 @@ namespace TooDoo.Tests.Models
 
             Assert.Equal(later, task.UpdatedAt);
         }
+        [Fact]
+        public void DeleteTask_RemovesIt()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var october = new YearMonth(2026, 10);
+            var task1 = data.AddTask("Task 1", october, now);
+            var task2 = data.AddTask("Task 2 ", october, now);
+
+            var deleted = data.DeleteTask(task1.Id);
+
+            Assert.True(deleted);
+            Assert.Single(data.Tasks, task2);
+            Assert.DoesNotContain(task1, data.Tasks);
+
+        }
     }
 
 
