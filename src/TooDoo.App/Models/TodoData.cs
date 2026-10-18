@@ -1,4 +1,6 @@
-﻿namespace TooDoo.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TooDoo.Models
 {
     public class TodoData
     {
@@ -6,6 +8,20 @@
         public int SchemaVersion { get; set; } = 1;
         public List<TodoTask> Tasks { get; set; } = new();
         private TodoTask? FindTask(Guid id) => Tasks.FirstOrDefault(t => t.Id == id);
+
+        private bool TryFindSubTask(Guid taskid, Guid subtaskid, [NotNullWhen(true)] out TodoTask? task, [NotNullWhen(true)] out SubTask? subTask)
+        {
+            task = FindTask(taskid);
+            if (task == null)
+            {
+                subTask = null;
+                return false;
+            }
+            subTask = task.SubTasks.FirstOrDefault(t => t.Id == taskid);
+            return subTask != null;
+
+        }
+
 
         public TodoTask AddTask(string title, YearMonth? month, DateTime now)
         {
@@ -97,33 +113,21 @@
         public bool RenameSubTask(Guid taskId, Guid subTaskId, string title, DateTime now)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(title);
-            var task = FindTask(taskId);
 
-            if (task == null)
+            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subtask))
             {
-                return false;
+                return false; 
             }
-            var subTask = task.SubTasks.FirstOrDefault(s => s.Id == subTaskId);
 
-            if (subTask == null)
-            {
-                return false;
-            }
-            subTask.Title = title.Trim();
+            subtask.Title = title.Trim();
             task.UpdatedAt = now;
 
             return true;
         }
         public bool SetSubTaskDone(Guid taskId, Guid subTaskId, bool isDone, DateTime now)
         {
-            var task = FindTask(taskId);
-            if (task == null)
-            {
-                return false;
-            }
-            var subtask = task.SubTasks.FirstOrDefault(s => s.Id == subTaskId);
-            if (subtask == null)
-            {
+            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subtask))
+            { 
                 return false;
             }
             subtask.IsDone = isDone;
@@ -134,18 +138,11 @@
         }
         public bool DeleteSubTask(Guid taskId, Guid subTaskId, DateTime now)
         {
-            var task = FindTask(taskId);
-
-            if (task == null)
+            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subtask))
             {
                 return false;
             }
 
-            var subtask = task.SubTasks.FirstOrDefault(s => s.Id == subTaskId);
-            if (subtask == null)
-            {
-                return false;
-            }
             task.SubTasks.Remove(subtask);
             task.UpdatedAt = now;
             return true;
