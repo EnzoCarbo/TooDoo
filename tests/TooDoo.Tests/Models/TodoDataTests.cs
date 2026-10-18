@@ -221,6 +221,24 @@ namespace TooDoo.Tests.Models
             Assert.Empty(task1.SubTasks);
 
         }
+
+        [Fact]
+        public void AddSubTask_UnknownTask_ReturnsNull()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task1 = data.AddTask("Task 1", october, now);
+            var task2 = data.AddTask("Task 2 ", october, later);
+
+            var subTask = data.AddSubTask(Guid.NewGuid(), "  Sub Task 1  ", now);
+
+            Assert.Null(subTask);
+            Assert.Empty(task1.SubTasks);
+            Assert.Empty(task2.SubTasks);
+
+        }
     }
 
 
