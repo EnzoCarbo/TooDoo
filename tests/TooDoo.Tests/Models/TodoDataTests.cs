@@ -135,6 +135,8 @@ namespace TooDoo.Tests.Models
             Assert.Equal(now, task.CreatedAt);
         }
 
+
+
         [Fact]
         public void SetTaskDone_UpdatesUpdatedAt()
         {
@@ -353,6 +355,24 @@ namespace TooDoo.Tests.Models
             Assert.Equal(later, task1.UpdatedAt);
             Assert.Contains(subTask2, task1.SubTasks);
         }
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void RenameSubTask_WithBlankTitle_Throws(string title)
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task1 = data.AddTask("Task 1", october, now);
+            var task2 = data.AddTask("Task 2 ", october, later);
 
+            var subTask1 = data.AddSubTask(task1.Id, "  Sub Task 1  ", now);
+            var subTask2 = data.AddSubTask(task1.Id, "  Sub Task 2  ", now);
+            Assert.NotNull(subTask1);
+            Assert.Throws<ArgumentException>(() => data.RenameSubTask(task1.Id, subTask1.Id, title, later));
+            Assert.Equal("Sub Task 1", subTask1.Title);
+            Assert.Equal(now, task1.UpdatedAt);
+        }
     }
 }
