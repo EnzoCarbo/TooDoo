@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-namespace TooDoo.Models;
+﻿namespace TooDoo.Models;
 
 public readonly record struct YearMonth : IComparable<YearMonth>
 {

@@ -1,153 +1,152 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace TooDoo.Models
+namespace TooDoo.Models;
+
+public class TodoData
 {
-    public class TodoData
+
+    public int SchemaVersion { get; set; } = 1;
+    public List<TodoTask> Tasks { get; set; } = new();
+    private TodoTask? FindTask(Guid id) => Tasks.FirstOrDefault(t => t.Id == id);
+
+    private bool TryFindSubTask(Guid taskId, Guid subTaskId, [NotNullWhen(true)] out TodoTask? task, [NotNullWhen(true)] out SubTask? subTask)
     {
-
-        public int SchemaVersion { get; set; } = 1;
-        public List<TodoTask> Tasks { get; set; } = new();
-        private TodoTask? FindTask(Guid id) => Tasks.FirstOrDefault(t => t.Id == id);
-
-        private bool TryFindSubTask(Guid taskId, Guid subTaskId, [NotNullWhen(true)] out TodoTask? task, [NotNullWhen(true)] out SubTask? subTask)
+        task = FindTask(taskId);
+        if (task == null)
         {
-            task = FindTask(taskId);
-            if (task == null)
-            {
-                subTask = null;
-                return false;
-            }
-            subTask = task.SubTasks.FirstOrDefault(s => s.Id == subTaskId);
-            return subTask != null;
+            subTask = null;
+            return false;
+        }
+        subTask = task.SubTasks.FirstOrDefault(s => s.Id == subTaskId);
+        return subTask != null;
 
+    }
+
+
+    public TodoTask AddTask(string title, YearMonth? month, DateTime now)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+
+        var task = new TodoTask
+        {
+            Id = Guid.NewGuid(),
+            Title = title.Trim(),
+            Month = month,
+            CreatedAt = now,
+            UpdatedAt = now,
+        };
+        Tasks.Add(task);
+
+        return task;
+    }
+
+    public IEnumerable<TodoTask> TasksIn(YearMonth? yearMonth)
+    {
+        return Tasks.Where(t => t.Month == yearMonth);
+    }
+
+    public bool RenameTask(Guid id, string title, DateTime now)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+        var task = FindTask(id);
+        if (task == null)
+        {
+            return false;
         }
 
+        task.Title = title.Trim();
+        task.UpdatedAt = now;
+        return true;
+    }
 
-        public TodoTask AddTask(string title, YearMonth? month, DateTime now)
+    public bool SetTaskDone(Guid id, bool isDone, DateTime now)
+    {
+        var task = FindTask(id);
+        if (task == null)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(title);
+            return false;
+        }
+        task.IsDone = isDone;
+        task.UpdatedAt = now;
+        return true;
+    }
 
-            var task = new TodoTask
-            {
-                Id = Guid.NewGuid(),
-                Title = title.Trim(),
-                Month = month,
-                CreatedAt = now,
-                UpdatedAt = now,
-            };
-            Tasks.Add(task);
+    public bool MoveTask(Guid id, YearMonth? yearMonth, DateTime now)
+    {
+        var task = FindTask(id);
+        if (task == null)
+        {
+            return false;
+        }
+        task.Month = yearMonth;
+        task.UpdatedAt = now;
+        return true;
+    }
 
-            return task;
+    public bool DeleteTask(Guid id)
+    {
+        var task = FindTask(id);
+        if (task == null)
+        {
+            return false;
+        }
+        Tasks.Remove(task);
+        return true;
+    }
+
+    public SubTask? AddSubTask(Guid taskId, string title, DateTime now)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+        var task = FindTask(taskId);
+        if (task == null)
+        {
+            return null;
+        }
+        var subTask = new SubTask
+        {
+            Id = Guid.NewGuid(),
+            Title = title.Trim(),
+        };
+        task.UpdatedAt = now;
+        task.SubTasks.Add(subTask);
+        return subTask;
+    }
+    public bool RenameSubTask(Guid taskId, Guid subTaskId, string title, DateTime now)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+
+        if (!TryFindSubTask(taskId, subTaskId, out var task, out var subTask))
+        {
+            return false;
         }
 
-        public IEnumerable<TodoTask> TasksIn(YearMonth? yearMonth)
+        subTask.Title = title.Trim();
+        task.UpdatedAt = now;
+
+        return true;
+    }
+    public bool SetSubTaskDone(Guid taskId, Guid subTaskId, bool isDone, DateTime now)
+    {
+        if (!TryFindSubTask(taskId, subTaskId, out var task, out var subTask))
         {
-            return Tasks.Where(t => t.Month == yearMonth);
+            return false;
+        }
+        subTask.IsDone = isDone;
+        task.UpdatedAt = now;
+
+        return true;
+
+    }
+    public bool DeleteSubTask(Guid taskId, Guid subTaskId, DateTime now)
+    {
+        if (!TryFindSubTask(taskId, subTaskId, out var task, out var subTask))
+        {
+            return false;
         }
 
-        public bool RenameTask(Guid id, string title, DateTime now)
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(title);
-            var task = FindTask(id);
-            if (task == null)
-            {
-                return false;
-            }
-
-            task.Title = title.Trim();
-            task.UpdatedAt = now;
-            return true;
-        }
-
-        public bool SetTaskDone(Guid id, bool isDone, DateTime now)
-        {
-            var task = FindTask(id);
-            if (task == null)
-            {
-                return false;
-            }
-            task.IsDone = isDone;
-            task.UpdatedAt = now;
-            return true;
-        }
-
-        public bool MoveTask(Guid id, YearMonth? yearMonth, DateTime now)
-        {
-            var task = FindTask(id);
-            if (task == null)
-            {
-                return false;
-            }
-            task.Month = yearMonth;
-            task.UpdatedAt = now;
-            return true;
-        }
-
-        public bool DeleteTask(Guid id)
-        {
-            var task = FindTask(id);
-            if (task == null)
-            {
-                return false;
-            }
-            Tasks.Remove(task);
-            return true;
-        }
-
-        public SubTask? AddSubTask(Guid taskId, string title, DateTime now)
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(title);
-            var task = FindTask(taskId);
-            if (task == null)
-            {
-                return null;
-            }
-            var subTask = new SubTask
-            {
-                Id = Guid.NewGuid(),
-                Title = title.Trim(),
-            };
-            task.UpdatedAt = now;
-            task.SubTasks.Add(subTask);
-            return subTask;
-        }
-        public bool RenameSubTask(Guid taskId, Guid subTaskId, string title, DateTime now)
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(title);
-
-            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subTask))
-            {
-                return false;
-            }
-
-            subTask.Title = title.Trim();
-            task.UpdatedAt = now;
-
-            return true;
-        }
-        public bool SetSubTaskDone(Guid taskId, Guid subTaskId, bool isDone, DateTime now)
-        {
-            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subTask))
-            {
-                return false;
-            }
-            subTask.IsDone = isDone;
-            task.UpdatedAt = now;
-
-            return true;
-
-        }
-        public bool DeleteSubTask(Guid taskId, Guid subTaskId, DateTime now)
-        {
-            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subTask))
-            {
-                return false;
-            }
-
-            task.SubTasks.Remove(subTask);
-            task.UpdatedAt = now;
-            return true;
-        }
+        task.SubTasks.Remove(subTask);
+        task.UpdatedAt = now;
+        return true;
     }
 }
 
