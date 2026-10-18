@@ -72,19 +72,21 @@ public readonly record struct YearMonth : IComparable<YearMonth>
 
     public static YearMonth Parse(string s)
     {
+        ArgumentNullException.ThrowIfNull(s);
 
-        var result = s.Split('-');
-
-        if (result.Length != 2)
+        if (s.Length != 7 || s[4] != '-')
         {
             throw new FormatException($"Invalid year-month: '{s}'. Expected format: yyyy-MM.");
         }
 
-        int year = int.Parse(result[0]);
-        int month = int.Parse(result[1]);
+        if (!int.TryParse(s.Substring(0, 4), out int year)
+            || !int.TryParse(s.Substring(5, 2), out int month)
+            || month < 0 || month > 12)
+        {
+            throw new FormatException($"Invalid month: '{s}'. Expected Month between 1 and 12");
+        }
 
         return new YearMonth(year, month);
-
     }
 
 

@@ -111,10 +111,18 @@ public class YearMonthTests
     [InlineData("2026")]
     [InlineData("abc")]
     [InlineData("")]
-
+    [InlineData("2026-13")]
+    [InlineData("2026-1")]
+    [InlineData("2026-ab")]
     public void Parse_InvalideText_Throw(string value)
     {
         Assert.Throws<FormatException>(() => YearMonth.Parse(value));
+    }
+
+    [Fact]
+    public void Parse_Null_ThrowsArgumentNullException()
+    {
+        Assert.Throws<ArgumentNullException>(() => YearMonth.Parse(null!));
     }
 
 }
