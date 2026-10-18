@@ -9,15 +9,15 @@ namespace TooDoo.Models
         public List<TodoTask> Tasks { get; set; } = new();
         private TodoTask? FindTask(Guid id) => Tasks.FirstOrDefault(t => t.Id == id);
 
-        private bool TryFindSubTask(Guid taskid, Guid subtaskid, [NotNullWhen(true)] out TodoTask? task, [NotNullWhen(true)] out SubTask? subTask)
+        private bool TryFindSubTask(Guid taskId, Guid subtaskId, [NotNullWhen(true)] out TodoTask? task, [NotNullWhen(true)] out SubTask? subTask)
         {
-            task = FindTask(taskid);
+            task = FindTask(taskId);
             if (task == null)
             {
                 subTask = null;
                 return false;
             }
-            subTask = task.SubTasks.FirstOrDefault(t => t.Id == taskid);
+            subTask = task.SubTasks.FirstOrDefault(t => t.Id == subtaskId);
             return subTask != null;
 
         }
