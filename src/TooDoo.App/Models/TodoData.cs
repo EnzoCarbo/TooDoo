@@ -96,7 +96,34 @@ namespace TooDoo.Models
             task.SubTasks.Add(subtask);
             return subtask;
         }
+        public bool RenameSubTask(Guid taskId, Guid subTaskId, string title, DateTime now)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(title);
+            var task = FindTask(taskId);
 
+            if (task == null)
+            {
+                return false;
+            }
+            var subTask = task.SubTasks.FirstOrDefault(s => s.Id == subTaskId);
+
+            if (subTask == null)
+            {
+                return false;
+            }
+            subTask.Title = title.Trim();
+            task.UpdatedAt = now;
+
+            return true;
+        }
+        //public bool SetSubTaskDone(Guid taskId, Guid subTaskId, bool isDone, DateTime now)
+        //{
+
+        //}
+        //public bool DeleteSubTask(Guid taskId, Guid subTaskId, DateTime now)
+        //{
+
+        //}
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Xml.Linq;
 using TooDoo.Models;
 
 namespace TooDoo.Tests.Models
@@ -239,10 +240,29 @@ namespace TooDoo.Tests.Models
             Assert.Empty(task2.SubTasks);
 
         }
+
+        [Fact]
+        public void RenameSubTask_ChangesTitle_AndUpdatesParent()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task1 = data.AddTask("Task 1", october, now);
+            var task2 = data.AddTask("Task 2 ", october, later);
+
+            var subTask1 = data.AddSubTask(task1.Id, "  Sub Task 1  ", now);
+            var subTask2 = data.AddSubTask(task1.Id, "  Sub Task 2  ", now);
+            Assert.NotNull(subTask1);
+            Assert.NotNull(subTask2);
+
+            var renamed = data.RenameSubTask(task1.Id, subTask1.Id, "  Rename Sub Task 1  ", later);
+
+            Assert.True(renamed);
+            Assert.Equal("Rename Sub Task 1", subTask1.Title);
+            Assert.Equal(later, task1.UpdatedAt);
+            Assert.Equal("Sub Task 2", subTask2.Title);
+
+        }
     }
-
-
-
-
-
 }
