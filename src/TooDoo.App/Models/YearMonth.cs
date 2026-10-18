@@ -48,11 +48,11 @@ public readonly record struct YearMonth : IComparable<YearMonth>
 
     public int CompareTo(YearMonth other)
     {
-        int yearComparaison = Year.CompareTo(other.Year);
+        int yearComparison = Year.CompareTo(other.Year);
 
-        if (yearComparaison != 0)
+        if (yearComparison != 0)
         {
-            return yearComparaison;
+            return yearComparison;
         }
         
         return Month.CompareTo(other.Month);

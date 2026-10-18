@@ -73,11 +73,21 @@ public class YearMonthTests
 
         var march = new YearMonth(2026, 03);
         var april = new YearMonth(2026, 04);
-
-            Assert.True(december2026 < january2027);
-
-            Assert.True(march < april);
-
+        var march2 = new YearMonth(2026, 3);
+        Assert.True(march <= march2);
+        Assert.True(march >= march2);
+        Assert.False(march < march2);
+        Assert.False(march > march2);
+        Assert.True(december2026 < january2027);
+        Assert.True(march < april);
+        Assert.True(december2026 <= january2027);
+        Assert.True(march <= april);
+        Assert.False(december2026 > january2027);
+        Assert.False(march > april);
+        Assert.False(december2026 >= january2027);
+        Assert.False(march >= april);
+        Assert.True(january2027 > december2026);
+        Assert.True(april >= march);
     }
 
     [Theory]
@@ -115,7 +125,7 @@ public class YearMonthTests
     [InlineData("2026-1")]
     [InlineData("2026-ab")]
     [InlineData("2026-00")]
-    public void Parse_InvalideText_Throw(string value)
+    public void Parse_InvalidText_Throws(string value)
     {
         Assert.Throws<FormatException>(() => YearMonth.Parse(value));
     }
