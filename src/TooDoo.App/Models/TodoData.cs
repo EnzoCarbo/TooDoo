@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms.Design;
-
-namespace TooDoo.Models
+﻿namespace TooDoo.Models
 {
     public class TodoData
     {
@@ -116,14 +114,42 @@ namespace TooDoo.Models
 
             return true;
         }
-        //public bool SetSubTaskDone(Guid taskId, Guid subTaskId, bool isDone, DateTime now)
-        //{
+        public bool SetSubTaskDone(Guid taskId, Guid subTaskId, bool isDone, DateTime now)
+        {
+            var task = FindTask(taskId);
+            if (task == null)
+            {
+                return false;
+            }
+            var subtask = task.SubTasks.FirstOrDefault(s => s.Id == subTaskId);
+            if (subtask == null)
+            {
+                return false;
+            }
+            subtask.IsDone = isDone;
+            task.UpdatedAt = now;
 
-        //}
-        //public bool DeleteSubTask(Guid taskId, Guid subTaskId, DateTime now)
-        //{
+            return true;
 
-        //}
+        }
+        public bool DeleteSubTask(Guid taskId, Guid subTaskId, DateTime now)
+        {
+            var task = FindTask(taskId);
+
+            if (task == null)
+            {
+                return false;
+            }
+
+            var subtask = task.SubTasks.FirstOrDefault(s => s.Id == subTaskId);
+            if (subtask == null)
+            {
+                return false;
+            }
+            task.SubTasks.Remove(subtask);
+            task.UpdatedAt = now;
+            return true;
+            }
     }
 }
 
