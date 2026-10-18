@@ -1,4 +1,6 @@
-﻿namespace TooDoo.Models
+﻿using System.Windows.Forms.Design;
+
+namespace TooDoo.Models
 {
     public class TodoData
     {
@@ -75,6 +77,24 @@
             }
             Tasks.Remove(task);
             return true;
+        }
+
+        public SubTask? AddSubTask(Guid taskId, string title, DateTime now)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(title);
+            var task = FindTask(taskId);
+            if (task == null)
+            {
+                return null;
+            }
+            var subtask = new SubTask
+            {
+                Id = Guid.NewGuid(),
+                Title = title.Trim(),
+            };
+            task.UpdatedAt = now;
+            task.SubTasks.Add(subtask);
+            return subtask;
         }
 
     }

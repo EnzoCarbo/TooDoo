@@ -1,4 +1,5 @@
-﻿using TooDoo.Models;
+﻿using System.Drawing;
+using TooDoo.Models;
 
 namespace TooDoo.Tests.Models
 {
@@ -181,6 +182,43 @@ namespace TooDoo.Tests.Models
             Assert.False(deleted);
             Assert.Contains(task1, data.Tasks);
             Assert.Contains(task2, data.Tasks);
+
+        }
+
+        [Fact]
+        public void AddSubTask_UpdatesParentUpdatedAt()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task1 = data.AddTask("Task 1", october, now);
+            var task2 = data.AddTask("Task 2 ", october, later);
+
+            var subTask = data.AddSubTask(task1.Id, "  Sub Task 1  ", later);
+
+            Assert.NotNull(subTask);
+            Assert.NotEqual(task1.Id, subTask.Id);
+            Assert.Equal(later, task1.UpdatedAt);
+            Assert.Contains(subTask, task1.SubTasks);
+            Assert.False(subTask.IsDone);
+            Assert.Equal("Sub Task 1", subTask.Title);
+            Assert.Empty(task2.SubTasks);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void AddSubTask_WithBlankTitle_Throws(string title)
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 31, 15, 8, 30, 0);
+            var october = new YearMonth(2026, 10);
+            var task1 = data.AddTask("Task 1", october, now);
+
+            Assert.Throws<ArgumentException>(() => data.AddSubTask(task1.Id, title, now));
+
+            Assert.Empty(task1.SubTasks);
 
         }
     }
