@@ -81,7 +81,7 @@ public readonly record struct YearMonth : IComparable<YearMonth>
 
         if (!int.TryParse(s.Substring(0, 4), out int year)
             || !int.TryParse(s.Substring(5, 2), out int month)
-            || month < 0 || month > 12)
+            || month < 1 || month > 12)
         {
             throw new FormatException($"Invalid month: '{s}'. Expected Month between 1 and 12");
         }
