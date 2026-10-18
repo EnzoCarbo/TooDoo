@@ -9,7 +9,7 @@ namespace TooDoo.Models
         public List<TodoTask> Tasks { get; set; } = new();
         private TodoTask? FindTask(Guid id) => Tasks.FirstOrDefault(t => t.Id == id);
 
-        private bool TryFindSubTask(Guid taskId, Guid subtaskId, [NotNullWhen(true)] out TodoTask? task, [NotNullWhen(true)] out SubTask? subTask)
+        private bool TryFindSubTask(Guid taskId, Guid subTaskId, [NotNullWhen(true)] out TodoTask? task, [NotNullWhen(true)] out SubTask? subTask)
         {
             task = FindTask(taskId);
             if (task == null)
@@ -17,7 +17,7 @@ namespace TooDoo.Models
                 subTask = null;
                 return false;
             }
-            subTask = task.SubTasks.FirstOrDefault(t => t.Id == subtaskId);
+            subTask = task.SubTasks.FirstOrDefault(s => s.Id == subTaskId);
             return subTask != null;
 
         }
@@ -47,6 +47,7 @@ namespace TooDoo.Models
 
         public bool RenameTask(Guid id, string title, DateTime now)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(title);
             var task = FindTask(id);
             if (task == null)
             {
@@ -101,36 +102,36 @@ namespace TooDoo.Models
             {
                 return null;
             }
-            var subtask = new SubTask
+            var subTask = new SubTask
             {
                 Id = Guid.NewGuid(),
                 Title = title.Trim(),
             };
             task.UpdatedAt = now;
-            task.SubTasks.Add(subtask);
-            return subtask;
+            task.SubTasks.Add(subTask);
+            return subTask;
         }
         public bool RenameSubTask(Guid taskId, Guid subTaskId, string title, DateTime now)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(title);
 
-            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subtask))
+            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subTask))
             {
-                return false; 
+                return false;
             }
 
-            subtask.Title = title.Trim();
+            subTask.Title = title.Trim();
             task.UpdatedAt = now;
 
             return true;
         }
         public bool SetSubTaskDone(Guid taskId, Guid subTaskId, bool isDone, DateTime now)
         {
-            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subtask))
-            { 
+            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subTask))
+            {
                 return false;
             }
-            subtask.IsDone = isDone;
+            subTask.IsDone = isDone;
             task.UpdatedAt = now;
 
             return true;
@@ -138,15 +139,15 @@ namespace TooDoo.Models
         }
         public bool DeleteSubTask(Guid taskId, Guid subTaskId, DateTime now)
         {
-            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subtask))
+            if (!TryFindSubTask(taskId, subTaskId, out var task, out var subTask))
             {
                 return false;
             }
 
-            task.SubTasks.Remove(subtask);
+            task.SubTasks.Remove(subTask);
             task.UpdatedAt = now;
             return true;
-            }
+        }
     }
 }
 

@@ -100,6 +100,23 @@ namespace TooDoo.Tests.Models
 
         }
 
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+
+        public void RenameTask_WithBlankTitle_Throws(string title)
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task = data.AddTask("Task 1", october, now);
+
+            Assert.Throws<ArgumentException>(() => data.RenameTask(task.Id, title, later));
+            Assert.Equal("Task 1" ,task.Title);
+            Assert.Equal(now, task.UpdatedAt);
+        }
+
 
         [Fact]
         public void RenameTask_UnknownId_ReturnsFalse()
