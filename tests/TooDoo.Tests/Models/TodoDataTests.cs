@@ -113,7 +113,7 @@ namespace TooDoo.Tests.Models
             var task = data.AddTask("Task 1", october, now);
 
             Assert.Throws<ArgumentException>(() => data.RenameTask(task.Id, title, later));
-            Assert.Equal("Task 1" ,task.Title);
+            Assert.Equal("Task 1", task.Title);
             Assert.Equal(now, task.UpdatedAt);
         }
 
@@ -155,6 +155,23 @@ namespace TooDoo.Tests.Models
         }
 
         [Fact]
+        public void SetTaskDone_UnknownId_ReturnsFalse()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task = data.AddTask("Task 1", october, now);
+
+            var taskDone = data.SetTaskDone(Guid.NewGuid(), true, later);
+
+            Assert.False(taskDone);
+
+            Assert.False(task.IsDone);
+            Assert.Equal(now, task.UpdatedAt);
+        }
+
+        [Fact]
         public void MoveTask_ToBacklog_SetsMonthNull()
         {
             var data = new TodoData();
@@ -170,6 +187,24 @@ namespace TooDoo.Tests.Models
             Assert.Null(task.Month);
 
             Assert.Equal(later, task.UpdatedAt);
+        }
+
+        [Fact]
+        public void MoveTask_UnknownId_ReturnsFalse()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task = data.AddTask("Task 1", october, now);
+
+            var moved = data.MoveTask(Guid.NewGuid(), null, later);
+
+            Assert.False(moved);
+
+            Assert.Equal(october, task.Month);
+
+            Assert.Equal(now, task.UpdatedAt);
         }
         [Fact]
         public void DeleteTask_RemovesIt()
@@ -285,6 +320,29 @@ namespace TooDoo.Tests.Models
         }
 
         [Fact]
+        public void RenameSubTask_UnknownTask_ReturnsFalse()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task1 = data.AddTask("Task 1", october, now);
+            var task2 = data.AddTask("Task 2 ", october, later);
+
+            var subTask1 = data.AddSubTask(task1.Id, "  Sub Task 1  ", now);
+            var subTask2 = data.AddSubTask(task1.Id, "  Sub Task 2  ", now);
+            Assert.NotNull(subTask1);
+            Assert.NotNull(subTask2);
+
+            var renamed = data.RenameSubTask(Guid.NewGuid(), subTask1.Id, "  Rename Sub Task 1  ", later);
+
+            Assert.False(renamed);
+            Assert.Equal("Sub Task 1", subTask1.Title);
+            Assert.Equal(now, task1.UpdatedAt);
+            Assert.Equal("Sub Task 2", subTask2.Title);
+        }
+
+        [Fact]
         public void SetSubTaskDone_ChecksSubTask_AndUpdatesParent()
         {
             var data = new TodoData();
@@ -300,7 +358,7 @@ namespace TooDoo.Tests.Models
             Assert.NotNull(subTask1);
             Assert.NotNull(subTask2);
 
-            var completed = data.SetSubTaskDone(task1.Id, subTask1.Id, true, later); 
+            var completed = data.SetSubTaskDone(task1.Id, subTask1.Id, true, later);
 
             Assert.True(completed);
             Assert.True(subTask1.IsDone);
@@ -355,6 +413,33 @@ namespace TooDoo.Tests.Models
             Assert.Equal(later, task1.UpdatedAt);
             Assert.Contains(subTask2, task1.SubTasks);
         }
+
+        [Fact]
+
+        public void DeleteSubTask_WrongParent_ReturnsFalse()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var later = now.AddHours(1);
+            var october = new YearMonth(2026, 10);
+            var task1 = data.AddTask("Task 1", october, now);
+            var task2 = data.AddTask("Task 2 ", october, now);
+
+            var subTask1 = data.AddSubTask(task1.Id, "  Sub Task 1  ", now);
+            var subTask2 = data.AddSubTask(task1.Id, "  Sub Task 2  ", now);
+
+            Assert.NotNull(subTask1);
+            Assert.NotNull(subTask2);
+
+            var deleted = data.DeleteSubTask(task2.Id, subTask1.Id, later);
+
+            Assert.False(deleted);
+            Assert.Contains(subTask1, task1.SubTasks);
+            Assert.Equal(now, task1.UpdatedAt);
+            Assert.Contains(subTask2, task1.SubTasks);
+            Assert.Equal(now, task2.UpdatedAt);
+        }
+
         [Theory]
         [InlineData("")]
         [InlineData("   ")]
