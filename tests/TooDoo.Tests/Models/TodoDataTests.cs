@@ -374,5 +374,17 @@ namespace TooDoo.Tests.Models
             Assert.Equal("Sub Task 1", subTask1.Title);
             Assert.Equal(now, task1.UpdatedAt);
         }
+
+        [Fact]
+        public void AddTask_KeepsUnicodeTitle()
+        {
+            var data = new TodoData();
+            var now = new DateTime(2026, 10, 10, 10, 10, 10, 10, 10);
+            var october = new YearMonth(2026, 10);
+            var task1 = data.AddTask("Café ☕ \"urgent\"", october, now);
+
+            Assert.Equal("Café ☕ \"urgent\"", task1.Title);
+        }
+
     }
 }
