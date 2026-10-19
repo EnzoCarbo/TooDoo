@@ -9,7 +9,7 @@
 # Mac bundle stuff
 *.dmg
 *.app
-
+!TooDoo.App/
 # User-specific files
 *.rsuser
 *.suo
