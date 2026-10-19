@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TooDoo.Abstractions;
 
-namespace TooDoo.Abstractions
+public interface IClock
 {
-    internal interface IClock
-    {
-    }
+    DateTime Now { get; }
 }

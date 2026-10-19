@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TooDoo.Abstractions;
 
-namespace TooDoo.Services
+namespace TooDoo.Services;
+
+public class SystemClock : IClock
 {
-    internal class SystemClock
-    {
-    }
+    public DateTime Now => DateTime.Now;
 }

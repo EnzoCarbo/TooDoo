@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TooDoo.Models;
 
-namespace TooDoo.Abstractions
+namespace TooDoo.Abstractions;
+
+public interface ITodoStore
 {
-    internal interface IClock
-    {
-    }
+    TodoData Data { get; }
+    void Update(Action<TodoData> mutation);
+    event EventHandler? DataChanged;
 }

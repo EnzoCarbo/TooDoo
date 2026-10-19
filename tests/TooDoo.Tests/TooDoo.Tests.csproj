@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\src\TooDoo.App\TooDoo.App.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Fakes\" />
+  </ItemGroup>
+
 </Project>
